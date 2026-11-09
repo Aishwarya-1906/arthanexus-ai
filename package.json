@@ -1,0 +1,35 @@
+{
+  "name": "arthanexus-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade, zero-cost, multi-provider AI financial intelligence & data engineering platform for Indian markets",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspaces",
+    "test": "node --test packages/financial-formulas/tests/formulas.test.js tests/unit/pipeline.test.js tests/unit/devops.test.js apps/engine/tests/engine.test.js",
+    "test:devops": "node --test tests/unit/devops.test.js",
+    "seed:demo": "node scripts/seed_demo.js",
+    "verify:health": "node scripts/verify_health.js",
+    "deploy:worker": "npm run deploy --workspace=apps/engine",
+    "deploy:web": "npm run deploy --workspace=apps/web"
+  },
+  "keywords": [
+    "fintech",
+    "india",
+    "sebi",
+    "amfi",
+    "rbi",
+    "portfolio",
+    "screener",
+    "cloudflare-workers",
+    "d1",
+    "r2",
+    "workers-ai"
+  ],
+  "author": "ArthaNexus Team",
+  "license": "Apache-2.0"
+}

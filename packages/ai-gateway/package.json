@@ -1,0 +1,8 @@
+{
+  "name": "@arthanexus/ai-gateway",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test tests/gateway.test.js"
+  }
+}

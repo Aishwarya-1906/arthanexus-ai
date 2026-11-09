@@ -1,0 +1,40 @@
+name = "arthanexus-engine"
+main = "apps/engine/src/index.js"
+compatibility_date = "2026-11-09"
+compatibility_flags = ["nodejs_compat"]
+
+# Cost Guardrail: Strict free tier ceilings
+[vars]
+ALLOW_PAID_SERVICES = "false"
+ENABLE_AI_INFERENCE = "true"
+ENABLE_BACKGROUND_CRON = "true"
+MAX_DAILY_AI_REQUESTS = "1000"
+ENVIRONMENT = "production"
+
+# Primary Database: Cloudflare D1 (5M free daily reads, 100k daily writes)
+[[d1_databases]]
+binding = "DB"
+database_name = "arthanexus-d1-prod"
+database_id = "placeholder_d1_database_id"
+migrations_dir = "database/migrations"
+
+# Primary Object Store: Cloudflare R2 (10GB free, zero egress)
+[[r2_buckets]]
+binding = "RAW_BRONZE_BUCKET"
+bucket_name = "arthanexus-bronze-raw"
+
+# Primary AI Layer: Cloudflare Workers AI (10k free daily neurons)
+[ai]
+binding = "AI"
+
+# Redundant Scheduler: Cloudflare Cron Triggers (UTC)
+# - */5 * * * *: Liveness heartbeat & lease reconciliation
+# - 0 16 * * 1-5: 21:30 IST AMFI Mutual Fund NAV daily ingestion
+# - 0 4,7,10 * * 1-5: 09:30, 12:30, 15:30 IST RBI & SEBI regulatory/rate checks
+[triggers]
+crons = [
+  "*/5 * * * *",
+  "0 16 * * 1-5",
+  "0 4 * * 1-5",
+  "0 10 * * 1-5"
+]

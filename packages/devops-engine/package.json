@@ -1,0 +1,7 @@
+{
+  "name": "@arthanexus/devops-engine",
+  "version": "1.0.0",
+  "description": "DevOps, AWS, GitHub, Vercel & AI Root Cause Analytics Engine inspired by LocalStack, Infracost, CrewAI, and SigNoz",
+  "main": "src/index.js",
+  "license": "Apache-2.0"
+}

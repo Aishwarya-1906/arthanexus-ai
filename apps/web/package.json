@@ -1,0 +1,16 @@
+{
+  "name": "@arthanexus/terminal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node scripts/build_static.js",
+    "deploy": "npx wrangler pages deploy dist --project-name arthanexus-terminal"
+  },
+  "dependencies": {
+    "@arthanexus/types": "file:../../packages/types",
+    "@arthanexus/financial-formulas": "file:../../packages/financial-formulas",
+    "@arthanexus/ai-gateway": "file:../../packages/ai-gateway"
+  }
+}

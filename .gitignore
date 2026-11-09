@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+.wrangler/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+cloudflared.exe
+*.exe

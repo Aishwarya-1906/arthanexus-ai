@@ -1,0 +1,8 @@
+{
+  "name": "@arthanexus/financial-formulas",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test tests/formulas.test.js"
+  }
+}

@@ -1,0 +1,33 @@
+name: ArthaNexus Redundant Scheduler Watchdog & Reconciliation
+
+on:
+  schedule:
+    # Runs at off-minute cadences as secondary watchdog for Cloudflare Cron
+    - cron: '17 */2 * * *'  # Every 2 hours at minute 17
+    - cron: '45 16 * * 1-5' # 22:15 IST (Mon-Fri) AMFI reconciliation check
+  workflow_dispatch:
+    inputs:
+      force_replay:
+        description: 'Force replay missed ingestion windows'
+        required: false
+        default: 'false'
+
+jobs:
+  scheduler-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Scheduler Lease Reconciliation & Pipeline Check
+        env:
+          ALLOW_PAID_SERVICES: 'false'
+          CRON_DISPATCH_SECRET: ${{ secrets.CRON_DISPATCH_SECRET }}
+        run: |
+          node scripts/verify_health.js
