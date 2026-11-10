@@ -1685,3 +1685,329 @@ async function loadDevopsCostAndPredictive() {
   }
 }
 
+
+// =============================================================================
+// SEBI INSTRUCTOR & MULTI-AGENT FINANCIAL RESEARCH
+// Inspired by: svsairevanth/indian-stock-ai-agent · nabojyoti/agentic-equity-research-system
+// =============================================================================
+
+/** Switch SEBI sub-panels */
+function switchSebiTab(panel) {
+  document.querySelectorAll('[id^="sebi-panel-"]').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.sebi-sub-tab').forEach(b => {
+    b.classList.remove('bg-yellow-500/20', 'text-yellow-300', 'border-yellow-500/30');
+    b.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700');
+  });
+  const panelEl = document.getElementById(`sebi-panel-${panel}`);
+  const tabEl   = document.getElementById(`sebi-tab-${panel}`);
+  if (panelEl) panelEl.classList.remove('hidden');
+  if (tabEl) {
+    tabEl.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700');
+    tabEl.classList.add('bg-yellow-500/20', 'text-yellow-300', 'border-yellow-500/30');
+  }
+}
+
+/** Load SEBI tab — called when user clicks the SEBI Instructor nav item */
+async function loadSebiDashboard() {
+  switchSebiTab('research');
+  await Promise.all([loadSebiMarketStatus(), loadSebiIndices()]);
+}
+
+/** Fetch and display market status */
+async function loadSebiMarketStatus() {
+  try {
+    const r = await fetch('/api/v1/sebi/market-status');
+    const d = await r.json();
+    const badge = document.getElementById('sebi-market-status');
+    if (!badge) return;
+    const color = d.status === 'OPEN' ? 'text-emerald-400 bg-emerald-500' : d.status === 'PRE-OPEN' ? 'text-yellow-400 bg-yellow-500' : 'text-slate-400 bg-slate-500';
+    badge.innerHTML = `
+      <span class="h-2 w-2 rounded-full ${color.split(' ')[1]} animate-pulse"></span>
+      <span class="${color.split(' ')[0]} font-bold">${d.status}</span>
+      <span class="text-slate-400 hidden sm:inline">· ${d.session}</span>
+      <span class="text-slate-500 hidden lg:inline">· ${d.current_ist}</span>`;
+  } catch (_) {}
+}
+
+/** Fetch and display Nifty50 & Sensex indices */
+async function loadSebiIndices() {
+  try {
+    const r = await fetch('/api/v1/sebi/indices');
+    const d = await r.json();
+    const fmtPrice = (v) => v ? `₹${Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+    const fmtChg   = (c) => c !== undefined ? `${c > 0 ? '+' : ''}${Number(c).toFixed(2)}%` : '—';
+    const niftyP   = document.getElementById('nifty-price');
+    const niftyC   = document.getElementById('nifty-chg');
+    const sensexP  = document.getElementById('sensex-price');
+    const sensexC  = document.getElementById('sensex-chg');
+    if (niftyP)  niftyP.textContent  = fmtPrice(d.nifty50?.last_price);
+    if (niftyC)  { niftyC.textContent = fmtChg(d.nifty50?.change_pct); niftyC.className = `text-xs ${Number(d.nifty50?.change_pct) >= 0 ? 'text-emerald-400' : 'text-red-400'}`; }
+    if (sensexP) sensexP.textContent = fmtPrice(d.sensex?.last_price);
+    if (sensexC) { sensexC.textContent = fmtChg(d.sensex?.change_pct); sensexC.className = `text-xs ${Number(d.sensex?.change_pct) >= 0 ? 'text-emerald-400' : 'text-red-400'}`; }
+  } catch (_) {}
+}
+
+/** Render agent card helper */
+function renderAgentCard(agentData, colorClass) {
+  const icon = {
+    'Bullish Equity Analyst': 'fa-arrow-trend-up text-emerald-400',
+    'Bearish Risk Analyst':   'fa-arrow-trend-down text-red-400',
+    'CMT Certified Technical Analyst': 'fa-chart-bar text-blue-400',
+    'CFA Fundamental Research Analyst': 'fa-building-columns text-purple-400',
+    'Portfolio Risk Manager': 'fa-shield-halved text-orange-400',
+    'SEBI Compliance Officer': 'fa-scale-balanced text-yellow-400',
+  }[agentData.agent] || 'fa-robot text-slate-400';
+
+  const content = agentData.arguments
+    ? `<ul class="space-y-1 mt-2">${(agentData.arguments||[]).map(a => `<li class="flex gap-2"><i class="fa-solid fa-circle text-[4px] mt-1.5 opacity-50 flex-shrink-0"></i><span>${a}</span></li>`).join('')}</ul>`
+    : agentData.mandatory_disclosures
+    ? `<ul class="space-y-1 mt-2">${(agentData.mandatory_disclosures||[]).map(d => `<li class="flex gap-2"><i class="fa-solid fa-triangle-exclamation text-yellow-400 text-[10px] mt-0.5 flex-shrink-0"></i><span>${d}</span></li>`).join('')}</ul>`
+    : `<pre class="mt-2 text-[10px] text-slate-400 whitespace-pre-wrap">${JSON.stringify(agentData, null, 2).substring(0, 600)}</pre>`;
+
+  return `
+    <div class="bg-slate-900 rounded-xl border border-slate-800 p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <i class="fa-solid ${icon} text-sm"></i>
+        <span class="text-xs font-bold text-white">${agentData.agent}</span>
+        ${agentData.verdict ? `<span class="ml-auto px-2 py-0.5 rounded-lg text-[10px] font-bold ${agentData.verdict === 'BULLISH' ? 'bg-emerald-900 text-emerald-300' : 'bg-red-900 text-red-300'}">${agentData.verdict}</span>` : ''}
+      </div>
+      <div class="text-[11px] text-slate-300 leading-relaxed">${content}</div>
+      ${agentData.price_target_upside ? `<div class="mt-2 text-[11px] font-semibold text-emerald-400">🎯 ${agentData.price_target_upside}</div>` : ''}
+      ${agentData.downside_risk ? `<div class="mt-2 text-[11px] font-semibold text-red-400">⚠️ ${agentData.downside_risk}</div>` : ''}
+    </div>`;
+}
+
+/** Generate 6-agent equity research report */
+async function generateSebiReport() {
+  const symbol = (document.getElementById('sebi-research-symbol')?.value || 'RELIANCE').toUpperCase();
+  const out = document.getElementById('sebi-report-output');
+  if (!out) return;
+  out.innerHTML = `<div class="flex items-center gap-3 text-yellow-400"><i class="fa-solid fa-spinner fa-spin"></i> Running 6-agent analysis on ${symbol}…</div>`;
+  try {
+    const r = await fetch('/api/v1/sebi/research-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ symbol }),
+    });
+    const d = await r.json();
+    const ratingColor = d.consensus_rating === 'BUY' ? 'text-emerald-400 bg-emerald-900' : d.consensus_rating === 'ACCUMULATE' ? 'text-yellow-400 bg-yellow-900' : 'text-red-400 bg-red-900';
+    out.innerHTML = `
+      <div class="space-y-4">
+        <!-- Consensus Header -->
+        <div class="flex flex-wrap items-center gap-3 p-4 bg-slate-950 rounded-xl border border-slate-800">
+          <div>
+            <p class="text-xs text-slate-400">Consensus Rating</p>
+            <p class="text-2xl font-black ${ratingColor.split(' ')[0]}">${d.consensus_rating}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400">Confidence Score</p>
+            <p class="text-lg font-bold text-white">${d.consensus_score}</p>
+          </div>
+          <div class="flex-1 min-w-48">
+            <p class="text-xs text-slate-400 mb-1">Executive Summary</p>
+            <p class="text-xs text-slate-300 leading-relaxed">${d.executive_summary}</p>
+          </div>
+          <span class="px-3 py-1 rounded-xl text-[10px] font-mono ${d.agents?.compliance?.data_origin === 'demo_telemetry' ? 'bg-amber-900/50 text-amber-300' : 'bg-emerald-900/50 text-emerald-300'}">${d.data_origin || 'demo'}</span>
+        </div>
+        <!-- 6 Agent Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          ${renderAgentCard(d.agents.bull)}
+          ${renderAgentCard(d.agents.bear)}
+          ${renderAgentCard({...d.agents.technical, agent: 'CMT Certified Technical Analyst', arguments: [
+            d.agents.technical.current_price + ' — ' + d.agents.technical.price_position,
+            'RSI: ' + d.agents.technical.indicators.rsi_14,
+            d.agents.technical.indicators.ma_signal,
+            'Support: ' + d.agents.technical.indicators.support_resistance.immediate_support + ' | Resistance: ' + d.agents.technical.indicators.support_resistance.immediate_resistance,
+          ]})}
+          ${renderAgentCard({...d.agents.fundamental, agent: 'CFA Fundamental Research Analyst', arguments: [
+            'P/E: ' + d.agents.fundamental.valuation_matrix.pe_ratio,
+            'P/B: ' + d.agents.fundamental.valuation_matrix.pb_ratio,
+            'Graham Number: ' + d.agents.fundamental.valuation_matrix.graham_number,
+            'DCF Estimate: ' + d.agents.fundamental.valuation_matrix.dcf_estimate,
+            'ROE: ' + d.agents.fundamental.quality_metrics.roe,
+          ]})}
+          ${renderAgentCard({...d.agents.risk, agent: 'Portfolio Risk Manager', arguments: [
+            'Beta: ' + d.agents.risk.risk_metrics.beta,
+            '1-Day VaR (95%): ' + d.agents.risk.risk_metrics.daily_var_95pct,
+            'Recommended Max Allocation: ' + d.agents.risk.position_sizing.recommended_max_allocation,
+            'Hard Stop-Loss: ' + d.agents.risk.position_sizing.stop_loss_level,
+            d.agents.risk.portfolio_guidelines[0],
+          ]})}
+          ${renderAgentCard(d.agents.compliance)}
+        </div>
+        <!-- Next Steps -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-700">
+          <p class="text-xs font-bold text-white mb-2">📋 Recommended Next Steps</p>
+          <ul class="space-y-1">${d.next_steps.map(s => `<li class="text-xs text-slate-300 flex gap-2"><i class="fa-solid fa-check-circle text-emerald-400 mt-0.5 flex-shrink-0"></i>${s}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+/** Run Bull vs Bear debate */
+async function runSebiDebate() {
+  const symbol = (document.getElementById('sebi-debate-symbol')?.value || 'RELIANCE').toUpperCase();
+  const out = document.getElementById('sebi-debate-output');
+  if (!out) return;
+  out.innerHTML = `<div class="flex items-center gap-3 text-yellow-400"><i class="fa-solid fa-spinner fa-spin"></i> AI agents debating ${symbol}…</div>`;
+  try {
+    const r = await fetch('/api/v1/sebi/debate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ symbol }),
+    });
+    const d = await r.json();
+    out.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        ${renderAgentCard(d.bull)}
+        ${renderAgentCard(d.bear)}
+      </div>
+      <div class="mt-3">${renderAgentCard(d.compliance)}</div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+/** Load SEBI regulation detail */
+async function loadSebiRegulation() {
+  const topic = document.getElementById('sebi-reg-topic')?.value || 'investment_adviser';
+  const out = document.getElementById('sebi-reg-output');
+  if (!out) return;
+  out.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-yellow-400"></i> Loading…`;
+  try {
+    const r = await fetch(`/api/v1/sebi/regulation?topic=${topic}`);
+    const d = await r.json();
+    out.innerHTML = `
+      <div class="space-y-3">
+        <div class="p-3 bg-slate-950 rounded-xl border border-yellow-500/30">
+          <p class="text-xs font-bold text-yellow-400 mb-1"><i class="fa-solid fa-gavel mr-1"></i>${d.regulation}</p>
+        </div>
+        <div class="space-y-2">
+          ${(d.key_rules || []).map((rule, i) => `
+            <div class="flex gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-400 text-[10px] font-bold flex items-center justify-center">${i+1}</span>
+              <p class="text-xs text-slate-300">${rule}</p>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+/** Load market concept explanation */
+async function loadSebiConcept() {
+  const topic = document.getElementById('sebi-concept-topic')?.value || 'nifty50';
+  const out = document.getElementById('sebi-concept-output');
+  if (!out) return;
+  out.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-yellow-400"></i> Loading…`;
+  try {
+    const r = await fetch(`/api/v1/sebi/concept?topic=${topic}`);
+    const d = await r.json();
+    out.innerHTML = `
+      <div class="space-y-3">
+        <div class="p-3 bg-slate-950 rounded-xl border border-yellow-500/30">
+          <p class="text-sm font-bold text-white">${d.name || d.concept}</p>
+          <p class="text-xs text-slate-300 mt-1">${d.description || d.message}</p>
+        </div>
+        ${Object.entries(d).filter(([k]) => !['concept','name','description','found','data_origin'].includes(k)).map(([k, v]) => `
+          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+            <p class="text-[11px] font-bold text-yellow-400 uppercase mb-1">${k.replace(/_/g,' ')}</p>
+            ${Array.isArray(v) ? `<ul class="space-y-1">${v.map(i => `<li class="text-xs text-slate-300 flex gap-2"><i class="fa-solid fa-angle-right text-yellow-400 mt-0.5"></i>${i}</li>`).join('')}</ul>` : `<p class="text-xs text-slate-300">${v}</p>`}
+          </div>`).join('')}
+      </div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+/** Load NISM module info */
+async function loadNismModule() {
+  const series = document.getElementById('sebi-nism-series')?.value || 'VIII-equity-derivatives';
+  const out = document.getElementById('sebi-nism-output');
+  if (!out) return;
+  out.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-yellow-400"></i> Loading…`;
+  try {
+    const r = await fetch(`/api/v1/sebi/nism?series=${encodeURIComponent(series)}`);
+    const d = await r.json();
+    out.innerHTML = `
+      <div class="space-y-3">
+        <div class="p-4 bg-slate-950 rounded-xl border border-yellow-500/30">
+          <p class="text-sm font-bold text-white mb-1"><i class="fa-solid fa-certificate text-yellow-400 mr-2"></i>${d.full_name}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 text-xs">
+            <div><span class="text-slate-400">Mandatory for:</span><p class="text-white mt-0.5">${d.mandatory_for}</p></div>
+            <div><span class="text-slate-400">Exam Format:</span><p class="text-white mt-0.5">${d.exam_duration}</p></div>
+            <div><span class="text-slate-400">Validity:</span><p class="text-white mt-0.5">${d.validity}</p></div>
+          </div>
+        </div>
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+          <p class="text-[11px] font-bold text-yellow-400 mb-2">SYLLABUS HIGHLIGHTS</p>
+          <div class="flex flex-wrap gap-2">${(d.syllabus_highlights||[]).map(s => `<span class="px-2 py-1 bg-yellow-500/10 text-yellow-300 rounded-lg text-[11px] border border-yellow-500/20">${s}</span>`).join('')}</div>
+        </div>
+        <a href="${d.registration}" target="_blank" class="flex items-center gap-2 px-4 py-3 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 rounded-xl text-xs text-yellow-400 font-semibold transition">
+          <i class="fa-solid fa-external-link"></i> Register at NISM Portal: ${d.registration}
+        </a>
+      </div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+/** Load NSE live enriched quote */
+async function loadSebiQuote() {
+  const symbol = (document.getElementById('sebi-quote-symbol')?.value || 'RELIANCE').toUpperCase();
+  const out = document.getElementById('sebi-quote-output');
+  if (!out) return;
+  out.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-yellow-400"></i> Fetching ${symbol} quote…`;
+  try {
+    const r = await fetch(`/api/v1/sebi/quote?symbol=${symbol}`);
+    const d = await r.json();
+    const up = Number(d.change_pct) >= 0;
+    const fmtINR = (v) => v ? `₹${Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+    out.innerHTML = `
+      <div class="space-y-3">
+        <div class="flex items-start justify-between flex-wrap gap-3 p-4 bg-slate-950 rounded-xl border border-slate-800">
+          <div>
+            <p class="text-xs text-slate-400">${d.exchange} · ${d.symbol}</p>
+            <p class="text-3xl font-black font-mono text-white">${fmtINR(d.last_price)}</p>
+            <p class="text-sm font-semibold ${up ? 'text-emerald-400' : 'text-red-400'}">
+              ${up ? '▲' : '▼'} ${fmtINR(Math.abs(d.change))} (${up ? '+' : ''}${d.change_pct}%)
+            </p>
+          </div>
+          <span class="px-3 py-1 rounded-xl text-[10px] font-mono ${d.data_origin === 'yahoo_finance_live' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-amber-900/50 text-amber-300'}">${d.data_origin}</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          ${[
+            ['Day High', fmtINR(d.day_high)],
+            ['Day Low',  fmtINR(d.day_low)],
+            ['52W High', fmtINR(d.high_52w)],
+            ['52W Low',  fmtINR(d.low_52w)],
+            ['Prev Close', fmtINR(d.previous_close)],
+            ['Volume', d.volume ? Number(d.volume).toLocaleString('en-IN') : '—'],
+            ['Mkt Cap', d.market_cap_cr ? `₹${Number(d.market_cap_cr).toLocaleString('en-IN')} Cr` : '—'],
+            ['Beta', d.beta || '—'],
+          ].map(([label, val]) => `
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400">${label}</p>
+              <p class="text-xs font-bold text-white mt-0.5">${val}</p>
+            </div>`).join('')}
+        </div>
+        <p class="text-[10px] text-slate-500">Fetched at: ${d.fetched_at} · ${d.fallback_reason ? 'Fallback: ' + d.fallback_reason : 'Source: Yahoo Finance / .NS suffix'}</p>
+      </div>`;
+  } catch (err) {
+    out.innerHTML = `<div class="text-red-400 text-xs">Error: ${err.message}</div>`;
+  }
+}
+
+// Extend switchTab to handle 'sebi'
+const _origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
+// Hook into existing switchTab via event patch on nav clicks — loadSebiDashboard on sebi tab
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[onclick*="switchTab(\'sebi\')"]').forEach(btn => {
+    btn.addEventListener('click', loadSebiDashboard, { passive: true });
+  });
+  // Auto-refresh market status every 60 seconds
+  setInterval(loadSebiMarketStatus, 60000);
+});

@@ -37,6 +37,7 @@ const { AIGateway } = require(path.join(rootDir, 'packages/ai-gateway/src/index.
 const { DataGridPipeline } = require(path.join(rootDir, 'dataops/pipeline/bronze_silver_gold.js'));
 const { SchedulerControlPlane } = require(path.join(rootDir, 'ops/scheduler/leases.js'));
 const { DevOpsCoordinator } = require(path.join(rootDir, 'packages/devops-engine/src/index.js'));
+const { sebiAgent, nseDataFetcher, SEBI_REGULATIONS, MARKET_CONCEPTS } = require(path.join(rootDir, 'packages/sebi-agent/src/index.js'));
 const { fetchAmfiNavs } = require(path.join(rootDir, 'dataops/connectors/amfi.js'));
 const { fetchRbiData } = require(path.join(rootDir, 'dataops/connectors/rbi.js'));
 const { fetchSebiCirculars } = require(path.join(rootDir, 'dataops/connectors/sebi.js'));
@@ -679,6 +680,106 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 200, answer);
     }
 
+    // ── SEBI Instructor & Financial Agent Routes ──────────────────────────
+
+    // Market status (live clock-based)
+    if (pathname === '/api/v1/sebi/market-status' && method === 'GET') {
+      return sendJson(res, 200, sebiAgent.getMarketStatus());
+    }
+
+    // NSE live / enriched quote
+    if (pathname === '/api/v1/sebi/quote' && method === 'GET') {
+      const sym = parsedUrl.query.symbol || 'RELIANCE';
+      const quote = await nseDataFetcher.fetchQuote(sym);
+      return sendJson(res, 200, quote);
+    }
+
+    // NSE indices (Nifty50, Sensex)
+    if (pathname === '/api/v1/sebi/indices' && method === 'GET') {
+      const [nifty, sensex] = await Promise.all([
+        nseDataFetcher.fetchNifty50(),
+        nseDataFetcher.fetchSensex(),
+      ]);
+      return sendJson(res, 200, { nifty50: nifty, sensex });
+    }
+
+    // 6-Agent Equity Research Report
+    if (pathname === '/api/v1/sebi/research-report' && method === 'POST') {
+      const body = await parseBody(req);
+      const sym  = (body.symbol || 'RELIANCE').toUpperCase();
+      const quote = await nseDataFetcher.fetchQuote(sym);
+      const q = SEED_QUOTES[`NSE:${sym}`] || quote;
+      const f = SEED_FUNDAMENTALS.find(x => x.security_id === `NSE:${sym}`) || {};
+      const report = sebiAgent.generateEquityReport(sym, {
+        last_price: q.price || quote.last_price,
+        high_52w:   q.high_52w || quote.high_52w,
+        low_52w:    q.low_52w  || quote.low_52w,
+        beta:       f.beta || quote.beta || 1.0,
+        rsi_14:     f.rsi_14 || quote.rsi_14 || 55,
+      }, {
+        pe_ratio:  f.pe_ratio,
+        pb_ratio:  f.pb_ratio,
+        roe:       f.roe,
+        eps:       f.eps,
+        market_cap_cr: f.market_cap_cr,
+        revenue_growth_yoy: f.revenue_growth_yoy,
+      });
+      return sendJson(res, 200, report);
+    }
+
+    // SEBI Regulation lookup
+    if (pathname === '/api/v1/sebi/regulation' && method === 'GET') {
+      const topic = parsedUrl.query.topic || 'investment_adviser';
+      return sendJson(res, 200, sebiAgent.explainSEBIRegulation(topic));
+    }
+
+    // All SEBI regulations list
+    if (pathname === '/api/v1/sebi/regulations' && method === 'GET') {
+      return sendJson(res, 200, {
+        total: Object.keys(SEBI_REGULATIONS).length,
+        topics: Object.keys(SEBI_REGULATIONS),
+        regulations: SEBI_REGULATIONS,
+        data_origin: 'regulatory_database',
+      });
+    }
+
+    // Market concepts lookup
+    if (pathname === '/api/v1/sebi/concept' && method === 'GET') {
+      const concept = parsedUrl.query.topic || 'nifty50';
+      return sendJson(res, 200, sebiAgent.explainMarketConcept(concept));
+    }
+
+    // All market concepts list
+    if (pathname === '/api/v1/sebi/concepts' && method === 'GET') {
+      return sendJson(res, 200, {
+        total: Object.keys(MARKET_CONCEPTS).length,
+        concepts: MARKET_CONCEPTS,
+        data_origin: 'market_education_db',
+      });
+    }
+
+    // NISM Module info
+    if (pathname === '/api/v1/sebi/nism' && method === 'GET') {
+      const series = parsedUrl.query.series || 'VIII-equity-derivatives';
+      return sendJson(res, 200, sebiAgent.getNISMModuleInfo(series));
+    }
+
+    // Bull/Bear debate for a symbol (quick endpoint)
+    if (pathname === '/api/v1/sebi/debate' && method === 'POST') {
+      const body = await parseBody(req);
+      const sym  = (body.symbol || 'RELIANCE').toUpperCase();
+      const quote = await nseDataFetcher.fetchQuote(sym);
+      const f = SEED_FUNDAMENTALS.find(x => x.security_id === `NSE:${sym}`) || {};
+      return sendJson(res, 200, {
+        symbol: sym,
+        bull: sebiAgent._bullAnalysis(sym, quote, f),
+        bear: sebiAgent._bearAnalysis(sym, quote, f),
+        compliance: sebiAgent._complianceReview(sym),
+        data_origin: quote.data_origin,
+        generated_at: new Date().toISOString(),
+      });
+    }
+
     // Default 404
     return sendJson(res, 404, { error: 'Route not found', path: pathname });
   } catch (err) {
@@ -694,4 +795,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { server, aiGateway, scheduler, pipeline, devops };
+module.exports = { server, aiGateway, scheduler, pipeline, devops, sebiAgent, nseDataFetcher };

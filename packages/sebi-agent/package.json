@@ -1,0 +1,7 @@
+{
+  "name": "@arthanexus/sebi-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SEBI-compliant multi-agent financial instructor engine for ArthaNexus AI",
+  "main": "src/index.js"
+}

@@ -10,8 +10,9 @@
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
     "build": "npm run build --workspaces",
-    "test": "node --test packages/financial-formulas/tests/formulas.test.js tests/unit/pipeline.test.js tests/unit/devops.test.js apps/engine/tests/engine.test.js",
+    "test": "node --test packages/financial-formulas/tests/formulas.test.js tests/unit/pipeline.test.js tests/unit/devops.test.js tests/unit/sebi.test.js apps/engine/tests/engine.test.js",
     "test:devops": "node --test tests/unit/devops.test.js",
+    "test:sebi": "node --test tests/unit/sebi.test.js",
     "seed:demo": "node scripts/seed_demo.js",
     "verify:health": "node scripts/verify_health.js",
     "deploy:worker": "npm run deploy --workspace=apps/engine",
