@@ -4,7 +4,7 @@
  */
 
 const http = require('node:http');
-const url = require('node:url');
+// url module no longer needed — migrated to WHATWG URL API (see server handler below)
 const path = require('node:path');
 const rootDir = path.resolve(__dirname, '../../../');
 
@@ -241,8 +241,10 @@ function parseBody(req) {
 }
 
 const server = http.createServer(async (req, res) => {
-  const parsedUrl = url.parse(req.url, true);
-  const pathname = parsedUrl.pathname;
+  // Use WHATWG URL API (replaces deprecated url.parse)
+  const reqUrl = new URL(req.url, 'http://localhost');
+  const pathname = reqUrl.pathname;
+  const parsedUrl = { query: Object.fromEntries(reqUrl.searchParams) };
   const method = req.method;
 
   // Handle CORS preflight

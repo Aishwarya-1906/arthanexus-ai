@@ -24,11 +24,18 @@ jobs:
       - name: Run DataGrid Pipeline & Quality Gate Tests
         run: node --test tests/unit/pipeline.test.js
 
+      - name: Run DevOps Engine Unit Tests
+        run: node --test tests/unit/devops.test.js
+
       - name: Run Engine REST API Integration Tests
         run: node --test apps/engine/tests/engine.test.js
+
+      - name: Run All Tests (Full Suite)
+        run: node --test packages/financial-formulas/tests/formulas.test.js tests/unit/pipeline.test.js tests/unit/devops.test.js apps/engine/tests/engine.test.js
 
       - name: Build Static Terminal Assets for Pages
         run: node apps/web/scripts/build_static.js
 
       - name: Verify Health Script
         run: node scripts/verify_health.js
+
