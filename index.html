@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ArthaNexus AI — Real-Time Indian Financial Intelligence & DataGrid</title>
+  <meta name="description" content="Production-grade, zero-cost AI financial intelligence and quantitative data engineering platform for Indian markets">
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            finGreen: '#10b981',
+            finRed: '#f43f5e',
+            finAmber: '#f59e0b',
+            finCyan: '#06b6d4',
+            surface: {
+              950: '#090d16',
+              900: '#0f172a',
+              850: '#131e36',
+              800: '#1e293b',
+              700: '#334155'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 4s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-4px)' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.15)' },
+              '100%': { boxShadow: '0 0 25px rgba(16, 185, 129, 0.35)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Premium Glassmorphism & Custom Accents */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .glass-card:hover {
+      border-color: rgba(52, 211, 153, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #34d399 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* Hide scrollbars for clean UI while keeping scrollability */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Smooth Transitions */
+    * { transition: background-color 0.2s ease, border-color 0.2s ease; }
+  </style>
+</head>
+<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white pb-20 md:pb-6">
+
+  <!-- Top Compliance Alert Bar -->
+  <aside aria-label="Regulatory Notice" class="bg-gradient-to-r from-amber-950/80 via-slate-900 to-amber-950/80 border-b border-amber-800/40 text-amber-200/90 text-xs px-3 sm:px-4 py-1.5 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+      <span class="flex h-2 w-2 rounded-full bg-amber-400 animate-ping"></span>
+      <span class="text-[11px] sm:text-xs"><strong>Educational Platform:</strong> ArthaNexus AI is not a SEBI-registered IA or RA. No personalized trade calls.</span>
+    </div>
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <span class="bg-emerald-950 text-emerald-400 border border-emerald-800/80 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider">COST: $0.00</span>
+      <span class="bg-slate-800/90 text-slate-300 px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 hidden sm:inline">DELAYED 15M / EOD</span>
+    </div>
+  </aside>
+
+  <!-- Sticky Top Header -->
+  <header class="glass-panel sticky top-0 z-40 px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between border-b border-slate-800/80">
+    <!-- Brand Logo -->
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center font-black text-white text-lg sm:text-xl shadow-lg shadow-emerald-900/40 transform hover:rotate-6 transition">
+        अ
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center">
+            ArthaNexus <span class="gradient-text ml-1">AI</span>
+          </h1>
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-emerald-950/90 text-emerald-400 border border-emerald-800/60 hidden sm:inline">
+            Terminal
+          </span>
+        </div>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Indian Financial Intelligence & DataGrid</p>
+      </div>
+    </div>
+
+    <!-- Header Controls: Mode Selector, Theme & Live Pill -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Everyday / Pro Switcher -->
+      <div class="bg-slate-900/90 p-1 rounded-xl border border-slate-700/80 flex items-center text-xs">
+        <button id="modeEveryday" onclick="setMode('everyday')" class="px-2.5 sm:px-3 py-1 rounded-lg transition font-semibold bg-emerald-600 text-white shadow-md flex items-center gap-1.5">
+          <i class="fa-solid fa-user-group text-[11px]"></i>
+          <span class="hidden sm:inline">Everyday Mode</span>
+          <span class="sm:hidden">Everyday</span>
+        </button>
+        <button id="modePro" onclick="setMode('pro')" class="px-2.5 sm:px-3 py-1 rounded-lg transition font-semibold text-slate-400 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-line text-[11px]"></i>
+          <span class="hidden sm:inline">Pro Terminal</span>
+          <span class="sm:hidden">Pro</span>
+        </button>
+      </div>
+
+      <!-- Theme Switcher -->
+      <button onclick="toggleTheme()" class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:bg-slate-800 flex items-center justify-center text-slate-300 transition hover:text-white">
+        <i id="themeIcon" class="fa-solid fa-moon text-xs sm:text-sm"></i>
+      </button>
+
+      <!-- Live Connection Pill -->
+      <div class="hidden lg:flex items-center gap-2 px-3 py-1 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs font-mono text-emerald-400">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-semibold text-[11px]">ONLINE (EDGE)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Laptop Desktop Navigation Bar (Scrollable on small laptops) -->
+  <nav class="hidden md:flex glass-panel border-b border-slate-800/80 px-4 sm:px-6 gap-1 overflow-x-auto text-xs font-semibold text-slate-400 no-scrollbar">
+    <button onclick="switchTab('overview')" class="nav-tab px-3.5 py-3 border-b-2 border-emerald-500 text-white flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-gauge-high"></i> Overview
+    </button>
+    <button onclick="switchTab('stocks')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-magnifying-glass-chart text-emerald-400"></i> Dynamic Stock Analyzer
+    </button>
+    <button onclick="switchTab('markets')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-arrow-trend-up"></i> Markets & Breadth
+    </button>
+    <button onclick="switchTab('funds')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-layer-group text-teal-400"></i> Mutual Funds & ETFs
+    </button>
+    <button onclick="switchTab('screener')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-filter text-amber-400"></i> Screener
+    </button>
+    <button onclick="switchTab('portfolio')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-briefcase text-cyan-400"></i> Portfolio Tracker
+    </button>
+    <button onclick="switchTab('research')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-microscope"></i> Macro & RBI
+    </button>
+    <button onclick="switchTab('ai')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 animate-pulse"></i> Ask ArthaNexus
+    </button>
+    <button onclick="switchTab('calculators')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-calculator"></i> Calculators
+    </button>
+    <button onclick="switchTab('learn')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-graduation-cap"></i> Learn
+    </button>
+    <button onclick="switchTab('dataops')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-network-wired text-cyan-400"></i> DataOps
+    </button>
+    <button onclick="switchTab('devops')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-cloud-bolt text-indigo-400"></i> AI DevOps & Cloud
+    </button>
+    <button onclick="switchTab('sebi')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-scale-balanced text-yellow-400"></i> SEBI Instructor
+    </button>
+    <button onclick="switchTab('settings')" class="nav-tab px-3.5 py-3 border-b-2 border-transparent hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <i class="fa-solid fa-gear"></i> Settings
+    </button>
+  </nav>
+
+  <!-- Mobile Bottom Sticky Navigation Bar -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-slate-800 px-2 py-2 flex items-center justify-around text-[10px] font-semibold text-slate-400">
+    <button onclick="switchTab('overview')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg text-emerald-400">
+      <i class="fa-solid fa-gauge-high text-sm"></i>
+      <span>Overview</span>
+    </button>
+    <button onclick="switchTab('stocks')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-magnifying-glass-chart text-sm"></i>
+      <span>Stocks</span>
+    </button>
+    <button onclick="switchTab('funds')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-layer-group text-sm"></i>
+      <span>Funds</span>
+    </button>
+    <button onclick="switchTab('portfolio')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-briefcase text-sm"></i>
+      <span>Portfolio</span>
+    </button>
+    <button onclick="switchTab('ai')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 text-sm"></i>
+      <span>AI Chat</span>
+    </button>
+    <button onclick="switchTab('calculators')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-calculator text-sm"></i>
+      <span>Calcs</span>
+    </button>
+    <button onclick="switchTab('devops')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-cloud-bolt text-indigo-400 text-sm"></i>
+      <span>DevOps</span>
+    </button>
+    <button onclick="switchTab('sebi')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg hover:text-white">
+      <i class="fa-solid fa-scale-balanced text-yellow-400 text-sm"></i>
+      <span>SEBI</span>
+    </button>
+  </div>
+
+  <!-- Main Responsive Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6">
+
+    <!-- ===================================================================== -->
+    <!-- TAB: DYNAMIC STOCK ANALYZER & DIRECT SEARCH (PRIMARY REQUIREMENT)      -->
+    <!-- ===================================================================== -->
+    <section id="tab-stocks" class="space-y-6">
+      
+      <!-- High-Impact Animated Search & Custom Share Input Hero -->
+      <div class="relative overflow-hidden rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-surface-900 to-slate-950 border border-slate-700/80 shadow-2xl">
+        <div class="absolute -right-10 -top-10 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -bottom-10 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="relative z-10 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-widest font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800">
+                ⚡ Dynamic Quantitative Analyzer
+              </span>
+              <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+                Enter <span class="gradient-text">Any Indian Share</span> to Analyze
+              </h2>
+              <p class="text-xs text-slate-400">
+                Type any stock ticker or company name. The engine dynamically computes real-time pricing, 30-day technical indicators (SMA, RSI), audited financials, and valuation ratios.
+              </p>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span>DYNAMIC REST API ACTIVE</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Input Bar -->
+          <div class="flex flex-col sm:flex-row gap-2 pt-1">
+            <div class="relative flex-1">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+              <input type="text" id="customStockInput" 
+                     placeholder="Type share name e.g. TATAMOTORS, ZOMATO, PAYTM, IRFC, HAL, BEL..." 
+                     onkeydown="if(event.key==='Enter') analyzeCustomStock()"
+                     class="w-full bg-slate-950/90 border border-slate-700 text-sm text-slate-100 pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner">
+            </div>
+            <button onclick="analyzeCustomStock()" 
+                    class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 transition transform active:scale-95">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Analyze Share</span>
+            </button>
+          </div>
+
+          <!-- Quick Test Stock Chips -->
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 text-xs">
+            <span class="text-slate-500 text-[11px] font-medium shrink-0">Quick Test:</span>
+            <button onclick="quickAnalyze('TATAMOTORS')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Tata Motors</button>
+            <button onclick="quickAnalyze('ZOMATO')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Zomato</button>
+            <button onclick="quickAnalyze('PAYTM')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Paytm</button>
+            <button onclick="quickAnalyze('IRFC')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">IRFC</button>
+            <button onclick="quickAnalyze('HAL')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">HAL</button>
+            <button onclick="quickAnalyze('BEL')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">BEL</button>
+            <button onclick="quickAnalyze('BAJFINANCE')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Bajaj Finance</button>
+            <button onclick="quickAnalyze('SUZLON')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Suzlon</button>
+            <button onclick="quickAnalyze('VEDL')" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap text-[11px]">Vedanta</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC DEEP DIVE RESULT CONTAINER (Renders instantly for any stock entered) -->
+      <div id="dynamicStockDisplay" class="space-y-6">
+        <!-- Injected dynamically by app.js -->
+      </div>
+
+      <!-- General Stocks Table for Directory Exploration -->
+      <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Baseline Securities Directory</h3>
+            <p class="text-xs text-slate-400">Click any row below or use the analyzer above for deep quantitative teardowns.</p>
+          </div>
+          <div class="text-[11px] text-slate-500 font-mono">
+            CLICK ROW TO LOAD DEEP DIVE
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3 px-3">Symbol / Company</th>
+                <th class="py-3 px-3">Sector</th>
+                <th class="py-3 px-3 text-right">Price (₹)</th>
+                <th class="py-3 px-3 text-right">Change</th>
+                <th class="py-3 px-3 text-right">P/E</th>
+                <th class="py-3 px-3 text-right">M-Cap (₹ Cr)</th>
+                <th class="py-3 px-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="stocksTableBody" class="divide-y divide-slate-800">
+              <!-- Rendered by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: OVERVIEW & MARKETS                                              -->
+    <!-- ===================================================================== -->
+    <section id="tab-overview" class="hidden space-y-6">
+      <!-- Indices Tickers Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" id="marketIndicesGrid">
+        <!-- Rendered by app.js with animated skeleton -->
+      </div>
+
+      <!-- Mode Specific Summary Card -->
+      <div id="overviewGlance" class="glass-card rounded-2xl p-4 sm:p-6">
+        <!-- Injected based on Everyday / Pro Mode -->
+      </div>
+
+      <!-- Market Breadth + Regulatory Circulars -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Breadth Card -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-emerald-400"></i> Market Breadth (NSE)
+            </h3>
+            <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-400">15m Delay</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="flex justify-between text-xs font-medium">
+              <span class="text-emerald-400"><i class="fa-solid fa-arrow-up"></i> 1,420 Advances</span>
+              <span class="text-rose-400"><i class="fa-solid fa-arrow-down"></i> 980 Declines</span>
+            </div>
+            <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+              <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full" style="width: 59%;"></div>
+              <div class="bg-gradient-to-r from-rose-500 to-red-600 h-full" style="width: 41%;"></div>
+            </div>
+            <p class="text-[11px] text-slate-400 pt-1 leading-relaxed">
+              Advances lead decliners (1.45:1 ratio). Strong volume concentration in capital goods and financials.
+            </p>
+          </div>
+        </div>
+
+        <!-- Latest SEBI / RBI Bulletins -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-landmark text-amber-400"></i> Regulatory Bulletins (SEBI & RBI)
+            </h3>
+            <a href="https://www.sebi.gov.in" target="_blank" class="text-[11px] text-emerald-400 hover:underline font-mono">SEBI.GOV.IN</a>
+          </div>
+          <div class="space-y-2.5" id="regulatoryCircularsList">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: MARKETS & BREADTH                                               -->
+    <!-- ===================================================================== -->
+    <section id="tab-markets" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">Indian Market Structure & Timings</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+            <h4 class="font-bold text-emerald-400 uppercase tracking-wider">NSE & BSE Trading Hours (IST)</h4>
+            <ul class="space-y-1.5 text-slate-300">
+              <li>• Pre-Market Session: <strong>09:00 - 09:08 AM</strong></li>
+              <li>• Regular Equity Session: <strong>09:15 AM - 03:30 PM</strong></li>
+              <li>• Closing Calculation: <strong>03:30 - 03:40 PM</strong></li>
+              <li>• Post-Closing Session: <strong>03:40 - 04:00 PM</strong></li>
+            </ul>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+            <h4 class="font-bold text-cyan-400 uppercase tracking-wider">Settlement & Holiday Calendar</h4>
+            <p class="text-slate-300 leading-relaxed">
+              India operates on standard <strong>T+1 settlement</strong> for equities, with select large caps piloted on instantaneous <strong>T+0 settlement</strong>. Clearing holidays suppress trading but do not halt regulatory filings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: MUTUAL FUNDS & ETFS                                             -->
+    <!-- ===================================================================== -->
+    <section id="tab-funds" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white">AMFI Mutual Funds & ETFs</h2>
+            <p class="text-xs text-slate-400">Direct vs Regular, Growth options, verified daily NAVs, and expense ratios.</p>
+          </div>
+          <div class="flex gap-1.5 overflow-x-auto no-scrollbar">
+            <button onclick="loadFunds('Large Cap')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Large Cap</button>
+            <button onclick="loadFunds('Flexi Cap')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Flexi Cap</button>
+            <button onclick="loadFunds('Small Cap')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Small Cap</button>
+            <button onclick="loadFunds('')" class="px-2.5 py-1 text-xs rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800">All Schemes</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3 px-3">Scheme Name</th>
+                <th class="py-3 px-3">Category</th>
+                <th class="py-3 px-3 text-right">Latest NAV (₹)</th>
+                <th class="py-3 px-3 text-right">3Y CAGR</th>
+                <th class="py-3 px-3 text-right">Expense Ratio</th>
+                <th class="py-3 px-3 text-right">AUM (₹ Cr)</th>
+                <th class="py-3 px-3 text-center">Riskometer</th>
+              </tr>
+            </thead>
+            <tbody id="fundsTableBody" class="divide-y divide-slate-800">
+              <!-- Rendered by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: SCREENER                                                        -->
+    <!-- ===================================================================== -->
+    <section id="tab-screener" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-5">
+        <div>
+          <h2 class="text-base font-bold text-white">Quantitative Stock Screener</h2>
+          <p class="text-xs text-slate-400">Neutral mathematical filters without promotional or biased buy lists.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Max P/E Multiple</label>
+            <input type="number" id="screenerMaxPe" value="35" class="w-full bg-slate-900 border border-slate-700 text-xs px-3 py-2 rounded-lg text-slate-200">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Min Return on Equity (ROE %)</label>
+            <input type="number" id="screenerMinRoe" value="15" class="w-full bg-slate-900 border border-slate-700 text-xs px-3 py-2 rounded-lg text-slate-200">
+          </div>
+          <div class="flex items-end">
+            <button onclick="runScreener()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-play"></i> Filter Universe
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3 px-3">Company</th>
+                <th class="py-3 px-3">Sector</th>
+                <th class="py-3 px-3 text-right">Price</th>
+                <th class="py-3 px-3 text-right">P/E</th>
+                <th class="py-3 px-3 text-right">ROE %</th>
+                <th class="py-3 px-3 text-right">ROCE %</th>
+                <th class="py-3 px-3 text-right">Debt/Equity</th>
+              </tr>
+            </thead>
+            <tbody id="screenerTableBody" class="divide-y divide-slate-800">
+              <!-- Rendered by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: PORTFOLIO TRACKER                                               -->
+    <!-- ===================================================================== -->
+    <section id="tab-portfolio" class="hidden space-y-6">
+      <!-- Portfolio Metrics Header Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" id="portfolioMetricsGrid">
+        <div class="glass-card rounded-2xl p-4">
+          <p class="text-[11px] text-slate-400">Total Invested</p>
+          <p id="portTotalInvested" class="text-lg sm:text-xl font-bold text-white mt-1">₹0</p>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <p class="text-[11px] text-slate-400">Current Value</p>
+          <p id="portCurrentVal" class="text-lg sm:text-xl font-bold text-white mt-1">₹0</p>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <p class="text-[11px] text-slate-400">Unrealized P&L</p>
+          <p id="portTotalPnl" class="text-lg sm:text-xl font-bold text-emerald-400 mt-1">₹0 (0.00%)</p>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <p class="text-[11px] text-slate-400">Max Drawdown</p>
+          <p id="portMaxDrawdown" class="text-lg sm:text-xl font-bold text-slate-300 mt-1">0.00%</p>
+        </div>
+      </div>
+
+      <!-- Holdings List -->
+      <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white">Portfolio Holdings</h3>
+            <p class="text-xs text-slate-400">Manual entry or CSV upload. Zero broker passwords or credentials required.</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="document.getElementById('csvFileInput').click()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv text-emerald-400"></i> Import CSV
+            </button>
+            <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCsvImport(event)">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 text-slate-400 uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3 px-3">Asset</th>
+                <th class="py-3 px-3 text-right">Quantity</th>
+                <th class="py-3 px-3 text-right">Avg Price</th>
+                <th class="py-3 px-3 text-right">Current Price</th>
+                <th class="py-3 px-3 text-right">Invested Value</th>
+                <th class="py-3 px-3 text-right">Current Value</th>
+                <th class="py-3 px-3 text-right">P&L (%)</th>
+              </tr>
+            </thead>
+            <tbody id="portfolioHoldingsBody" class="divide-y divide-slate-800">
+              <!-- Rendered by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: MACRO & RESEARCH                                                -->
+    <!-- ===================================================================== -->
+    <section id="tab-research" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">India Macroeconomic Intelligence Dashboard</h2>
+        <p class="text-xs text-slate-400">Directly integrated series from Reserve Bank of India, MOSPI, and World Bank Open Data.</p>
+
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">RBI Policy Repo Rate</span>
+            <p class="text-2xl font-bold text-white mt-1">6.50%</p>
+            <span class="text-[10px] text-emerald-400 font-medium">Sourced: RBI Official Statistics</span>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">10Y Benchmark G-Sec Yield</span>
+            <p class="text-2xl font-bold text-white mt-1">6.82%</p>
+            <span class="text-[10px] text-slate-400 font-medium">Risk-Free Benchmark</span>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">India Annual GDP Growth</span>
+            <p class="text-2xl font-bold text-emerald-400 mt-1">8.2%</p>
+            <span class="text-[10px] text-slate-400 font-medium">World Bank Open Data</span>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">CPI Inflation</span>
+            <p class="text-2xl font-bold text-amber-400 mt-1">5.4%</p>
+            <span class="text-[10px] text-slate-400 font-medium">RBI Corridor [2% - 6%]</span>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">USD / INR Reference</span>
+            <p class="text-2xl font-bold text-white mt-1">₹84.35</p>
+            <span class="text-[10px] text-slate-400 font-medium">FBIL Reference Rate</span>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400">Standing Deposit Facility (SDF)</span>
+            <p class="text-2xl font-bold text-white mt-1">6.25%</p>
+            <span class="text-[10px] text-slate-400 font-medium">Liquidity Absorption</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: ASK ARTHANEXUS AI                                               -->
+    <!-- ===================================================================== -->
+    <section id="tab-ai" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Ask ArthaNexus Intelligence
+            </h2>
+            <p class="text-xs text-slate-400">Grounded financial Q&A citing balance sheets, SEBI regulations, and verified math.</p>
+          </div>
+          <span class="text-[10px] bg-slate-800/80 border border-slate-700 px-2 py-0.5 rounded-lg font-mono text-emerald-400">STRICT CITATION ENGINE</span>
+        </div>
+
+        <!-- Chat History -->
+        <div id="aiChatHistory" class="space-y-3 max-h-[420px] overflow-y-auto pr-2">
+          <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-2">
+            <div class="flex items-center gap-2 text-emerald-400 font-semibold">
+              <i class="fa-solid fa-robot"></i> ArthaNexus Assistant
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Ask about any financial ratio (P/E, ROCE, ROE, XIRR), balance sheet debt metrics, mutual fund taxation, or SEBI regulations. Answers are grounded strictly in verified data without hallucinations.
+            </p>
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="flex gap-2">
+          <input type="text" id="aiInput" placeholder="Ask e.g. What is the difference between ROCE and ROE?" onkeydown="if(event.key==='Enter') submitAiQuery()" class="flex-1 bg-slate-950 border border-slate-700 text-xs sm:text-sm text-slate-200 px-3.5 py-3 rounded-xl focus:outline-none focus:border-emerald-500">
+          <button onclick="submitAiQuery()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 shadow-lg shadow-emerald-950">
+            <span>Ask</span> <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: CALCULATORS                                                     -->
+    <!-- ===================================================================== -->
+    <section id="tab-calculators" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- SIP Calculator -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-coins text-amber-400"></i> SIP (Systematic Investment Plan) Calculator
+          </h3>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Monthly Investment (₹)</label>
+              <input type="number" id="calcSipAmount" value="10000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Expected Return (% p.a.)</label>
+              <input type="number" id="calcSipRate" value="12" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Tenure (Years)</label>
+              <input type="number" id="calcSipYears" value="10" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <button onclick="runSipCalc()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">
+              Calculate Wealth Compounding
+            </button>
+            <div id="sipResult" class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 hidden"></div>
+          </div>
+        </div>
+
+        <!-- Indian Tax Regime Comparison -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> Indian Tax Regime Comparison (FY 2024-26)
+          </h3>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Annual Gross Income (₹)</label>
+              <input type="number" id="calcTaxIncome" value="1200000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">80C Investments (PF, ELSS, Insurance) [Old Regime]</label>
+              <input type="number" id="calcTax80C" value="150000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">80D Health Insurance Premium</label>
+              <input type="number" id="calcTax80D" value="25000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono">
+            </div>
+            <button onclick="runTaxCalc()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">
+              Compare New vs Old Tax
+            </button>
+            <div id="taxResult" class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: LEARN                                                           -->
+    <!-- ===================================================================== -->
+    <section id="tab-learn" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">Financial Literacy & Investor Rights</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs" id="glossaryGrid">
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <h4 class="font-bold text-emerald-400 mb-1">Price-to-Earnings (P/E) Multiple</h4>
+            <p class="text-slate-300 leading-relaxed">
+              Measures how much investors pay per rupee of net company profit. High P/E signifies high growth expectations. Always evaluate in the context of industry median and earnings growth (PEG).
+            </p>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+            <h4 class="font-bold text-emerald-400 mb-1">Return on Capital Employed (ROCE)</h4>
+            <p class="text-slate-300 leading-relaxed">
+              Assesses how efficiently total capital (equity + long term debt) generates operating profit (EBIT). Consistent ROCE &gt; 18% indicates high capital efficiency and pricing power.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: DATAOPS CONSOLE                                                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-dataops" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-network-wired text-cyan-400"></i> ArthaNexus DataGrid — DataOps Console
+          </h2>
+          <span class="text-xs bg-slate-800 px-2.5 py-1 rounded-lg text-cyan-400 font-mono">PRO / ADMIN</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+              <tr>
+                <th class="py-2.5 px-3">Source</th>
+                <th class="py-2.5 px-3">Cadence</th>
+                <th class="py-2.5 px-3 text-center">Status</th>
+                <th class="py-2.5 px-3 text-right">Trigger</th>
+              </tr>
+            </thead>
+            <tbody id="dataopsSourcesBody" class="divide-y divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: AI DEVOPS & CLOUD ANALYTICS (UNIFIED AWS & OPEN-SOURCE AI)       -->
+    <!-- ===================================================================== -->
+    <section id="tab-devops" class="hidden space-y-6">
+      
+      <!-- DevOps Top Hero & Integration Status Banner -->
+      <div class="relative overflow-hidden rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-surface-900 to-indigo-950/70 border border-indigo-900/60 shadow-2xl">
+        <div class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[10px] font-mono uppercase tracking-widest font-bold px-2 py-0.5 rounded bg-indigo-950/90 text-indigo-400 border border-indigo-800">
+                ⚡ AI-Powered DevOps Platform
+              </span>
+              <span id="devopsAwsPill" class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800">
+                AWS / LocalStack Emulation
+              </span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800">
+                Infracost: $0.00 Net
+              </span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+              DevOps & <span class="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">AI Infrastructure Intelligence</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Unified control plane powered by LocalStack, Infracost, CrewAI multi-agent RCA, and SigNoz observability.
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="loadDevopsDashboard()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-arrows-rotate text-emerald-400"></i> Refresh Telemetry
+            </button>
+            <button onclick="switchDevopsSubTab('rca')" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-md flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-brain"></i> AI RCA Engine
+            </button>
+            <button onclick="switchDevopsSubTab('assistant')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-md flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-robot"></i> DevOps Assistant
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key DevOps Metric Cards Ribbon -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- AWS Cloud Infrastructure -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-medium flex items-center gap-1.5"><i class="fa-brands fa-aws text-amber-400 text-sm"></i> AWS Resources</span>
+            <span id="awsRegionBadge" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">ap-south-1</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white" id="awsResourcesStat">3 S3 / 4 Lambda</div>
+          <div class="text-[11px] text-slate-400 flex items-center gap-2">
+            <span class="text-emerald-400 font-medium font-mono" id="awsStorageStat">975.4 MB</span> storage
+            <span class="text-amber-400 font-mono" id="awsAlarmsStat">1 Alarm</span>
+          </div>
+        </div>
+
+        <!-- CI/CD & Deployments -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-medium flex items-center gap-1.5"><i class="fa-brands fa-github text-white text-sm"></i> GitHub & Vercel</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">READY</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white" id="cicdBranchStat">main (261c84c)</div>
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Vercel Edge: Production</span>
+            <span class="text-emerald-400 font-mono">100% Passing</span>
+          </div>
+        </div>
+
+        <!-- Observability & Logs (SigNoz) -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-medium flex items-center gap-1.5"><i class="fa-solid fa-wave-square text-cyan-400 text-sm"></i> SigNoz APM</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">OTel Live</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white" id="signozErrorsStat">2 Error Patterns</div>
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>P95 Latency: 145ms</span>
+            <span class="text-amber-400 font-mono">17 Events (24h)</span>
+          </div>
+        </div>
+
+        <!-- Infracost Cloud Spend -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-medium flex items-center gap-1.5"><i class="fa-solid fa-coins text-emerald-400 text-sm"></i> Infracost Spend</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Free Tier</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-emerald-400" id="infracostNetStat">$0.00 / mo</div>
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Gross: $2.31/mo</span>
+            <span class="text-emerald-400 font-mono">Save $1.18</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Navigation Navigation Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto border-b border-slate-800 pb-2 no-scrollbar text-xs font-semibold text-slate-400">
+        <button id="devopsBtn-aws" onclick="switchDevopsSubTab('aws')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white shadow flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-brands fa-aws text-amber-300"></i> AWS Infrastructure
+        </button>
+        <button id="devopsBtn-cicd" onclick="switchDevopsSubTab('cicd')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-code-branch text-emerald-400"></i> CI/CD & Deployments
+        </button>
+        <button id="devopsBtn-logs" onclick="switchDevopsSubTab('logs')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-terminal text-cyan-400"></i> Log Analytics (SigNoz)
+        </button>
+        <button id="devopsBtn-rca" onclick="switchDevopsSubTab('rca')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-brain text-purple-400"></i> AI Root Cause Analysis (CrewAI)
+        </button>
+        <button id="devopsBtn-assistant" onclick="switchDevopsSubTab('assistant')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-robot text-indigo-400"></i> AI DevOps Assistant
+        </button>
+        <button id="devopsBtn-cost" onclick="switchDevopsSubTab('cost')" class="devops-subtab px-3.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-chart-pie text-emerald-400"></i> Predictive & Cost Optimization
+        </button>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 1: AWS INFRASTRUCTURE (LOCALSTACK / LIVE)                      -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-aws" class="devops-pane space-y-6">
+        
+        <!-- S3 Buckets Management -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-bucket text-amber-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">Amazon S3 Object Storage</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">AWS / LocalStack S3</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Bucket Name</th>
+                  <th class="py-2.5 px-3">Region</th>
+                  <th class="py-2.5 px-3">Objects</th>
+                  <th class="py-2.5 px-3">Storage Size</th>
+                  <th class="py-2.5 px-3">Encryption</th>
+                  <th class="py-2.5 px-3">Lifecycle Rules</th>
+                  <th class="py-2.5 px-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="devopsS3TableBody" class="divide-y divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Lambda Functions Management -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-bolt text-amber-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">AWS Lambda Serverless Functions</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Node.js 20.x (ARM64 Graviton2)</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Function Name</th>
+                  <th class="py-2.5 px-3">Memory</th>
+                  <th class="py-2.5 px-3">24h Invocations</th>
+                  <th class="py-2.5 px-3">Errors (24h)</th>
+                  <th class="py-2.5 px-3">P95 Latency</th>
+                  <th class="py-2.5 px-3">State</th>
+                  <th class="py-2.5 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="devopsLambdaTableBody" class="divide-y divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CloudWatch Alarms & Live Metric Telemetry -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Alarms -->
+          <div class="glass-card rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                <h3 class="text-sm font-bold text-white">CloudWatch Active Alarms</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Evaluated every 300s</span>
+            </div>
+            <div id="devopsAlarmsContainer" class="space-y-2.5"></div>
+          </div>
+
+          <!-- CloudWatch Metrics Live Stream -->
+          <div class="glass-card rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-cyan-400"></i>
+                <h3 class="text-sm font-bold text-white">CloudWatch Telemetry Feed</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">15m Window Aggregations</span>
+            </div>
+            <div class="overflow-x-auto max-h-60 no-scrollbar">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                  <tr>
+                    <th class="py-2 px-2.5">Time (UTC)</th>
+                    <th class="py-2 px-2.5">CPU %</th>
+                    <th class="py-2 px-2.5">Memory %</th>
+                    <th class="py-2 px-2.5">Reqs</th>
+                    <th class="py-2 px-2.5">Errors</th>
+                    <th class="py-2 px-2.5">Latency</th>
+                  </tr>
+                </thead>
+                <tbody id="devopsMetricsTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 2: CI/CD & GITHUB / VERCEL DEPLOYMENTS                         -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-cicd" class="devops-pane hidden space-y-6">
+        
+        <!-- Vercel Deployment Health -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up text-indigo-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">Vercel Deployments (Production & Previews)</h3>
+            </div>
+            <button onclick="triggerVercelDeploy()" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-rocket"></i> Trigger Rebuild
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Deployment Target</th>
+                  <th class="py-2.5 px-3">URL</th>
+                  <th class="py-2.5 px-3">Branch & Commit</th>
+                  <th class="py-2.5 px-3">Build Duration</th>
+                  <th class="py-2.5 px-3">Timestamp</th>
+                  <th class="py-2.5 px-3 text-center">State</th>
+                </tr>
+              </thead>
+              <tbody id="devopsVercelTableBody" class="divide-y divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- GitHub Actions Workflows -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-brands fa-github text-white text-base"></i>
+              <h3 class="text-sm font-bold text-white">GitHub Actions CI/CD Workflows</h3>
+            </div>
+            <button onclick="triggerGitHubWorkflow()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-play text-emerald-400"></i> Dispatch CI Workflow
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Workflow Name</th>
+                  <th class="py-2.5 px-3">File</th>
+                  <th class="py-2.5 px-3">Event</th>
+                  <th class="py-2.5 px-3">Branch</th>
+                  <th class="py-2.5 px-3">Duration</th>
+                  <th class="py-2.5 px-3 text-center">Conclusion</th>
+                </tr>
+              </thead>
+              <tbody id="devopsGithubTableBody" class="divide-y divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Git Commits Stream -->
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-code-commit text-emerald-400"></i> Recent Repository Commits
+          </h3>
+          <div id="devopsCommitsContainer" class="space-y-2.5"></div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 3: LOG ANALYTICS (SIGNOZ APM ENGINE)                           -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-logs" class="devops-pane hidden space-y-6">
+        
+        <!-- Grouped Recurring Error Patterns (SigNoz style) -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-layer-group text-purple-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">Grouped Error Patterns (SigNoz APM Clustering)</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800">Fingerprint Deduplication</span>
+          </div>
+          <div id="devopsErrorPatternsContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- Real-Time Log Explorer -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-cyan-400"></i>
+              <h3 class="text-sm font-bold text-white">OpenTelemetry Structured Log Stream</h3>
+            </div>
+            <!-- Filters -->
+            <div class="flex items-center gap-2 flex-wrap text-xs">
+              <select id="logLevelFilter" onchange="filterDevopsLogs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200">
+                <option value="ALL">All Levels</option>
+                <option value="INFO">INFO</option>
+                <option value="WARN">WARN</option>
+                <option value="ERROR">ERROR</option>
+              </select>
+              <select id="logServiceFilter" onchange="filterDevopsLogs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200">
+                <option value="ALL">All Services</option>
+                <option value="arthanexus-engine-api">engine-api</option>
+                <option value="amfi-nav-worker">amfi-nav-worker</option>
+                <option value="rbi-macro-scraper">rbi-macro-scraper</option>
+                <option value="vercel-edge-router">vercel-edge-router</option>
+              </select>
+              <input id="logSearchInput" onkeyup="filterDevopsLogs()" type="text" placeholder="Search log text or trace..." class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 placeholder-slate-500 text-xs w-48 focus:outline-none focus:border-cyan-500">
+            </div>
+          </div>
+
+          <div class="overflow-x-auto max-h-96 no-scrollbar">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">Timestamp (UTC)</th>
+                  <th class="py-2.5 px-3">Service</th>
+                  <th class="py-2.5 px-3">Level</th>
+                  <th class="py-2.5 px-3">Message</th>
+                  <th class="py-2.5 px-3">Trace ID</th>
+                  <th class="py-2.5 px-3 text-right">Duration</th>
+                </tr>
+              </thead>
+              <tbody id="devopsLogTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 4: AI ROOT CAUSE ANALYSIS (CREWAI MULTI-AGENT ENGINE)          -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-rca" class="devops-pane hidden space-y-6">
+        
+        <!-- Incident Investigation Cards -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-users-gear text-purple-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">CrewAI Autonomous Incident Investigation Team</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800">SRE • Log Analyst • Architect • Remediation</span>
+          </div>
+
+          <!-- Incidents List -->
+          <div id="devopsIncidentsContainer" class="space-y-4"></div>
+        </div>
+
+        <!-- Custom Incident / Error Log Investigation Form -->
+        <div class="glass-card rounded-2xl p-5 space-y-4 border border-indigo-800/60">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-microscope text-indigo-400"></i> Trigger Multi-Agent RCA on Custom Error Log
+            </h3>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">Instant Synthesis</span>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <input id="rcaCustomService" type="text" placeholder="Affected Service (e.g. arthanexus-api)" class="sm:col-span-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
+              <input id="rcaCustomError" type="text" placeholder="Paste Error Message or Stack Trace (e.g. TimeoutError: pg-pool connection exceeded 30s)" class="sm:col-span-2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
+            </div>
+            <button onclick="investigateCustomIncident()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold flex items-center gap-2 transition shadow-md">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Launch Multi-Agent RCA Investigation
+            </button>
+          </div>
+          <div id="customRcaResultContainer" class="hidden p-4 rounded-xl bg-slate-950 border border-indigo-900/60 space-y-3"></div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 5: AI DEVOPS ASSISTANT (NATURAL LANGUAGE Q&A)                 -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-assistant" class="devops-pane hidden space-y-6">
+        
+        <div class="glass-card rounded-2xl p-5 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-robot text-indigo-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">Ask ArthaNexus DevOps AI</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Grounded SRE Knowledge</span>
+          </div>
+
+          <!-- Quick Query Prompt Pills -->
+          <div class="space-y-2">
+            <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Common Diagnostic Inquiries:</p>
+            <div class="flex items-center gap-2 flex-wrap text-xs">
+              <button onclick="askDevOpsPrompt('Why did my latest deployment fail?')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-question text-amber-400"></i> Why did my latest deployment fail?
+              </button>
+              <button onclick="askDevOpsPrompt('What is causing high AWS resource utilization?')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-microchip text-rose-400"></i> What is causing high AWS resource utilization?
+              </button>
+              <button onclick="askDevOpsPrompt('Which Lambda functions are experiencing errors?')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt text-yellow-400"></i> Which Lambda functions are experiencing errors?
+              </button>
+              <button onclick="askDevOpsPrompt('Analyze my application logs.')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-lines text-cyan-400"></i> Analyze my application logs.
+              </button>
+              <button onclick="askDevOpsPrompt('Identify potential infrastructure bottlenecks.')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-filter-circle-dollar text-purple-400"></i> Identify potential infrastructure bottlenecks.
+              </button>
+              <button onclick="askDevOpsPrompt('Explain the latest CI/CD pipeline failure.')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-brands fa-github text-slate-300"></i> Explain the latest CI/CD pipeline failure.
+              </button>
+              <button onclick="askDevOpsPrompt('What are the potential root causes of this incident?')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> What are the potential root causes of this incident?
+              </button>
+              <button onclick="askDevOpsPrompt('Recommend ways to optimize AWS costs.')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-900/40 text-slate-300 hover:text-indigo-200 border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-coins text-emerald-400"></i> Recommend ways to optimize AWS costs.
+              </button>
+            </div>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="flex items-center gap-2">
+            <input id="devopsAiInput" type="text" placeholder="Ask any question about your AWS infrastructure, CI/CD, or logs..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" onkeydown="if(event.key === 'Enter') submitDevOpsAiQuery()">
+            <button onclick="submitDevOpsAiQuery()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition flex items-center gap-1.5 shadow-md">
+              <i class="fa-solid fa-paper-plane"></i> Ask
+            </button>
+          </div>
+
+          <!-- Output Container -->
+          <div id="devopsAiResponseCard" class="hidden rounded-xl p-4 bg-slate-950/80 border border-indigo-900/60 space-y-3 text-xs leading-relaxed"></div>
+        </div>
+
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PANE 6: PREDICTIVE ANALYTICS & COST OPTIMIZATION (INFRACOST)        -->
+      <!-- =================================================================== -->
+      <div id="devopsPane-cost" class="devops-pane hidden space-y-6">
+        
+        <!-- Infracost AWS Monthly Cost Optimization -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-coins text-emerald-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">Infracost Deterministic AWS Cloud Spend Analysis</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">ap-south-1 Mumbai Pricing</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Gross Usage Estimate</span>
+              <div class="text-lg font-bold text-white" id="costGrossValue">$2.31 / mo</div>
+            </div>
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase font-mono">AWS Free Tier Offset</span>
+              <div class="text-lg font-bold text-emerald-400" id="costFreeTierValue">-$2.31 / mo</div>
+            </div>
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Net Billed Invoice</span>
+              <div class="text-lg font-bold text-emerald-400" id="costNetBilledValue">$0.00 / mo</div>
+            </div>
+          </div>
+
+          <!-- Component Breakdown Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2.5 px-3">AWS Service Component</th>
+                  <th class="py-2.5 px-3">Monthly Usage Volume</th>
+                  <th class="py-2.5 px-3">Monthly Cost</th>
+                  <th class="py-2.5 px-3 text-right">% of Total</th>
+                </tr>
+              </thead>
+              <tbody id="infracostTableBody" class="divide-y divide-slate-800"></tbody>
+            </table>
+          </div>
+
+          <!-- Optimization Recommendations -->
+          <div class="space-y-2 pt-2">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Identified Cost Optimizations:</h4>
+            <div id="costRecommendationsContainer" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <!-- Predictive Capacity Forecast -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-cyan-400 text-base"></i>
+              <h3 class="text-sm font-bold text-white">30-Day Resource Capacity Forecast (Predictive AI)</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">Seasonality Adjusted</span>
+          </div>
+
+          <div id="predictiveAlertBox" class="p-3 bg-amber-950/60 border border-amber-800/80 rounded-xl text-xs text-amber-200"></div>
+
+          <div class="overflow-x-auto max-h-60 no-scrollbar">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                <tr>
+                  <th class="py-2 px-3">Date</th>
+                  <th class="py-2 px-3">Forecasted CPU %</th>
+                  <th class="py-2 px-3">Forecasted Memory %</th>
+                  <th class="py-2 px-3">Forecasted S3 Storage</th>
+                  <th class="py-2 px-3 text-center">Capacity Risk</th>
+                </tr>
+              </thead>
+              <tbody id="predictiveTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB: SETTINGS                                                        -->
+    <!-- ===================================================================== -->
+    <!-- ===================================================================== -->
+    <!-- TAB: SEBI INSTRUCTOR & MULTI-AGENT FINANCIAL RESEARCH                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-sebi" class="hidden space-y-6">
+
+      <!-- Market Status Bar -->
+      <div class="glass-card rounded-2xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-scale-balanced text-yellow-400 text-xl"></i>
+            <div>
+              <h2 class="text-sm font-bold text-white">SEBI Instructor &amp; AI Financial Agent</h2>
+              <p class="text-[11px] text-slate-400">Inspired by: svsairevanth/indian-stock-ai-agent · nabojyoti/agentic-equity-research-system · nighomni123/fsi-skills-india</p>
+            </div>
+          </div>
+          <div id="sebi-market-status" class="flex items-center gap-2 px-3 py-1 rounded-xl border border-slate-700 text-xs font-mono">
+            <span class="h-2 w-2 rounded-full bg-slate-500 animate-pulse"></span>
+            <span class="text-slate-400">Loading market status…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-nav -->
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="switchSebiTab('research')" id="sebi-tab-research" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+          <i class="fa-solid fa-flask mr-1"></i> 6-Agent Research
+        </button>
+        <button onclick="switchSebiTab('debate')" id="sebi-tab-debate" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-white">
+          <i class="fa-solid fa-comments mr-1"></i> Bull vs Bear
+        </button>
+        <button onclick="switchSebiTab('regulations')" id="sebi-tab-regulations" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-white">
+          <i class="fa-solid fa-gavel mr-1"></i> SEBI Regulations
+        </button>
+        <button onclick="switchSebiTab('concepts')" id="sebi-tab-concepts" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-white">
+          <i class="fa-solid fa-graduation-cap mr-1"></i> Market Concepts
+        </button>
+        <button onclick="switchSebiTab('nism')" id="sebi-tab-nism" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-white">
+          <i class="fa-solid fa-certificate mr-1"></i> NISM Exams
+        </button>
+        <button onclick="switchSebiTab('livequote')" id="sebi-tab-livequote" class="sebi-sub-tab px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-white">
+          <i class="fa-solid fa-chart-line mr-1"></i> Live Quotes
+        </button>
+      </div>
+
+      <!-- Panel: 6-Agent Research Report -->
+      <div id="sebi-panel-research" class="space-y-4">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-flask text-yellow-400 mr-2"></i>6-Agent Collaborative Equity Research</h3>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <input id="sebi-research-symbol" type="text" placeholder="NSE Symbol e.g. RELIANCE, TCS, INFY…"
+              class="flex-1 min-w-48 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500">
+            <button onclick="generateSebiReport()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-magnifying-glass mr-1"></i> Generate Report
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs text-slate-500">Quick pick:</span>
+            <button onclick="document.getElementById('sebi-research-symbol').value='RELIANCE';generateSebiReport()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">RELIANCE</button>
+            <button onclick="document.getElementById('sebi-research-symbol').value='TCS';generateSebiReport()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">TCS</button>
+            <button onclick="document.getElementById('sebi-research-symbol').value='HDFCBANK';generateSebiReport()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">HDFCBANK</button>
+            <button onclick="document.getElementById('sebi-research-symbol').value='INFY';generateSebiReport()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">INFY</button>
+            <button onclick="document.getElementById('sebi-research-symbol').value='LT';generateSebiReport()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">L&amp;T</button>
+          </div>
+          <div id="sebi-report-output" class="text-xs text-slate-400 italic">Enter an NSE symbol above and click Generate Report to run the 6-agent collaborative analysis.</div>
+        </div>
+      </div>
+
+      <!-- Panel: Bull vs Bear Debate -->
+      <div id="sebi-panel-debate" class="space-y-4 hidden">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-comments text-yellow-400 mr-2"></i>Bull vs Bear AI Debate</h3>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <input id="sebi-debate-symbol" type="text" placeholder="NSE Symbol for debate…"
+              class="flex-1 min-w-48 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500">
+            <button onclick="runSebiDebate()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-swords mr-1"></i> Run Debate
+            </button>
+          </div>
+          <div id="sebi-debate-output" class="text-xs text-slate-400 italic">Enter an NSE symbol to start the Bull vs Bear AI debate.</div>
+        </div>
+      </div>
+
+      <!-- Panel: SEBI Regulations -->
+      <div id="sebi-panel-regulations" class="space-y-4 hidden">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-gavel text-yellow-400 mr-2"></i>SEBI Regulatory Framework</h3>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <select id="sebi-reg-topic" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500">
+              <option value="investment_adviser">Investment Adviser Regulations 2013</option>
+              <option value="research_analyst">Research Analyst Regulations 2014</option>
+              <option value="lodr">LODR Regulations 2015</option>
+              <option value="mutual_funds">Mutual Fund Regulations 1996</option>
+              <option value="investor_protection">Investor Protection Guidelines</option>
+            </select>
+            <button onclick="loadSebiRegulation()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-book mr-1"></i> Load
+            </button>
+          </div>
+          <div id="sebi-reg-output" class="text-xs text-slate-400 italic">Select a regulation topic to view the full rule set.</div>
+        </div>
+      </div>
+
+      <!-- Panel: Market Concepts -->
+      <div id="sebi-panel-concepts" class="space-y-4 hidden">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-graduation-cap text-yellow-400 mr-2"></i>Indian Market Concepts</h3>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <select id="sebi-concept-topic" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500">
+              <option value="nifty50">NIFTY 50 — Index Structure</option>
+              <option value="circuit_breaker">Market-Wide Circuit Breaker</option>
+              <option value="t_plus_one">T+1 Settlement Cycle</option>
+              <option value="bulk_block_deals">Bulk vs Block Deals</option>
+              <option value="futures_options">Futures &amp; Options Basics</option>
+              <option value="debt_market">Indian Debt Market</option>
+            </select>
+            <button onclick="loadSebiConcept()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-lightbulb mr-1"></i> Explain
+            </button>
+          </div>
+          <div id="sebi-concept-output" class="text-xs text-slate-400 italic">Select a concept to get a detailed explanation.</div>
+        </div>
+      </div>
+
+      <!-- Panel: NISM Exams -->
+      <div id="sebi-panel-nism" class="space-y-4 hidden">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-certificate text-yellow-400 mr-2"></i>NISM Certification Modules</h3>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <select id="sebi-nism-series" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500">
+              <option value="VIII-equity-derivatives">Series VIII — Equity Derivatives</option>
+              <option value="V-a-mutual-fund">Series V-A — Mutual Fund Distributors</option>
+              <option value="X-a-investment-adviser">Series X-A — Investment Adviser (Level 1)</option>
+              <option value="XV-research-analyst">Series XV — Research Analyst</option>
+            </select>
+            <button onclick="loadNismModule()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-info-circle mr-1"></i> Details
+            </button>
+          </div>
+          <div id="sebi-nism-output" class="text-xs text-slate-400 italic">Select a NISM certification module to view exam details and syllabus.</div>
+        </div>
+      </div>
+
+      <!-- Panel: Live Quotes -->
+      <div id="sebi-panel-livequote" class="space-y-4 hidden">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid fa-chart-line text-yellow-400 mr-2"></i>NSE Live / Enriched Quotes</h3>
+
+          <!-- Indices -->
+          <div id="sebi-indices-row" class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-slate-900 rounded-xl p-3 border border-slate-700">
+              <p class="text-[11px] text-slate-400 mb-1">NIFTY 50</p>
+              <p id="nifty-price" class="text-lg font-mono font-bold text-white">—</p>
+              <p id="nifty-chg" class="text-xs text-slate-400">—</p>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-3 border border-slate-700">
+              <p class="text-[11px] text-slate-400 mb-1">SENSEX</p>
+              <p id="sensex-price" class="text-lg font-mono font-bold text-white">—</p>
+              <p id="sensex-chg" class="text-xs text-slate-400">—</p>
+            </div>
+          </div>
+
+          <div class="flex gap-2 flex-wrap mb-4">
+            <input id="sebi-quote-symbol" type="text" placeholder="NSE Symbol e.g. WIPRO, AXISBANK…"
+              class="flex-1 min-w-48 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500">
+            <button onclick="loadSebiQuote()" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl text-sm transition">
+              <i class="fa-solid fa-bolt mr-1"></i> Fetch
+            </button>
+          </div>
+          <div id="sebi-quote-output" class="text-xs text-slate-400 italic">Enter NSE symbol to fetch live enriched quote from Yahoo Finance (via proxy).</div>
+        </div>
+      </div>
+
+      <!-- SEBI Disclaimer -->
+      <div class="glass-card rounded-2xl p-4 border border-yellow-500/20 bg-yellow-500/5">
+        <p class="text-[11px] text-yellow-300/80">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+          <strong>SEBI Disclaimer:</strong> ArthaNexus AI is strictly an educational and data research tool.
+          It is NOT a SEBI-registered Investment Adviser (IA) or Research Analyst (RA).
+          Nothing displayed constitutes personalized investment advice, trading calls, or guaranteed returns.
+          Investments in securities markets are subject to market risk. Read all scheme documents carefully.
+          For grievances: <a href="https://scores.sebi.gov.in" target="_blank" class="underline">scores.sebi.gov.in</a> | Helpline: 1800-266-7575
+        </p>
+      </div>
+
+    </section>
+
+        <section id="tab-settings" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">System Guardrails & Settings</h2>
+        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold text-slate-200">Enforce Zero-Cost Ceiling (ALLOW_PAID_SERVICES=false)</p>
+            <p class="text-[11px] text-slate-400">Strictly prevents pay-as-you-go billable fallbacks.</p>
+          </div>
+          <span class="bg-emerald-950 border border-emerald-800 text-emerald-400 px-3 py-1 rounded-lg font-mono font-bold">LOCKED: TRUE</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
