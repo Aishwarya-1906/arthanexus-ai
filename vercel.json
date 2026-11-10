@@ -1,11 +1,12 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "outputDirectory": "deploy_vercel",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/deploy_vercel/$1"
+      "source": "/",
+      "destination": "/deploy_vercel/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/deploy_vercel/$1"
     }
   ]
 }
