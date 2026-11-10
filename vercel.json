@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "outputDirectory": "deploy_vercel",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/deploy_vercel/$1"
+    }
+  ]
+}
